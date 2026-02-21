@@ -17,6 +17,10 @@ function calculateBonusByProfit(index, total, seller) {
 }
 
 function analyzeSalesData(data, options) {
+    // Используем функции из options, если они есть
+    const calculateRevenue = options?.calculateRevenue || calculateSimpleRevenue;
+    const calculateBonus = options?.calculateBonus || calculateBonusByProfit;
+
     const sellerStats = data.sellers.map(seller => ({
         id: seller.id,
         name: `${seller.first_name} ${seller.last_name}`,
@@ -31,12 +35,16 @@ function analyzeSalesData(data, options) {
 
     data.purchase_records.forEach(record => {
         const seller = sellerIndex[record.seller_id];
+        if (!seller) return;
+        
         seller.sales_count += 1;
         seller.revenue += record.total_amount;
 
         record.items.forEach(item => {
             const product = productIndex[item.sku];
-            const revenue = calculateSimpleRevenue(item, product);
+            if (!product) return;
+            
+            const revenue = calculateRevenue(item, product);
             const cost = product.purchase_price * item.quantity;
             seller.profit += revenue - cost;
             
@@ -47,7 +55,7 @@ function analyzeSalesData(data, options) {
     sellerStats.sort((a, b) => b.profit - a.profit);
 
     sellerStats.forEach((seller, index) => {
-        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
+        seller.bonus = calculateBonus(index, sellerStats.length, seller);
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
             .sort((a, b) => b.quantity - a.quantity)
