@@ -39,6 +39,8 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
+
+    const { calculateBonus } = options;
     // @TODO: Проверка входных данных
 
     // @TODO: Проверка наличия опций
@@ -90,7 +92,7 @@ function analyzeSalesData(data, options) {
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
         // Расчет бонуса
-        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
+        seller.bonus = calculateBonus(index, sellerStats.length, seller);
         seller.top_products = Object.entries(seller.products_sold)
         .map(([sku, quantity]) => ({sku, quantity}))
         .sort((a, b) => b.quantity - a.quantity)
@@ -109,3 +111,4 @@ function analyzeSalesData(data, options) {
     
 })); 
 }
+
