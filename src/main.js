@@ -1,3 +1,4 @@
+
 /**
  * Функция для расчета выручки
  * @param purchase запись о покупке
@@ -37,7 +38,7 @@ function calculateBonusByProfit(index, total, seller) {
  * @param options
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
-function analyzeSalesData(data) {
+function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
 
     // @TODO: Проверка наличия опций
@@ -67,7 +68,7 @@ function analyzeSalesData(data) {
         record.items.forEach(item => {
             const product = productIndex[item.sku]; 
           
-            const revenue = calculateSimpleRevenue(item);
+            const revenue = calculateSimpleRevenue(item, product);
             const cost = product.purchase_price * item.quantity;
             const profit = revenue - cost;
             seller.profit += profit;
