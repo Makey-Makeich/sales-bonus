@@ -1,3 +1,6 @@
+https://github.com/Makey-Makeich/sales-bonus/tree/master
+
+
 # Проектная работа "Пряники"
 5 спринт, модуль JS
 
