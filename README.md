@@ -1,4 +1,4 @@
-https://github.com/Makey-Makeich/sales-bonus/tree/master
+https://github.com/Makey-Makeich/sales-bonus
 
 
 # Проектная работа "Пряники"
