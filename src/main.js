@@ -1,3 +1,23 @@
+function calculateSimpleRevenue(purchase, _product) {
+    
+    const { discount, sale_price, quantity } = purchase;
+    const discountCoefficient = 1 - (discount / 100);
+    return sale_price * quantity * discountCoefficient;
+}
+
+function calculateBonusByProfit(index, total, seller) {
+    // @TODO: Расчёт бонуса от позиции в рейтинге
+    if (index === 0) {
+        return seller.profit * 0.15;
+    } else if (index === 1 || index === 2) {
+        return seller.profit * 0.10;
+    } else if (index === total - 1) {
+        return 0;
+    } else {
+        return seller.profit * 0.05;
+    }
+}
+
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
     if (!data || !data.sellers || !data.products || !data.purchase_records) {
@@ -35,7 +55,7 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return;
             
-            // ИСПРАВЛЕНО: используем options.calculateRevenue
+            // ПРАВИЛЬНО: используем функцию из options
             const revenue = options.calculateRevenue(item, product);
             const cost = product.purchase_price * item.quantity;
             seller.profit += revenue - cost;
@@ -49,7 +69,7 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
-        // ИСПРАВЛЕНО: используем options.calculateBonus
+        // ПРАВИЛЬНО: используем функцию из options
         seller.bonus = options.calculateBonus(index, sellerStats.length, seller);
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
