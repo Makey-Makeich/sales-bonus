@@ -1,5 +1,6 @@
 function calculateSimpleRevenue(purchase, _product) {
     // @TODO: Расчёт прибыли от операции
+
     const { discount, sale_price, quantity } = purchase;
     const discountCoefficient = 1 - (discount / 100);
     return sale_price * quantity * discountCoefficient;
@@ -55,7 +56,8 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return;
             
-            const revenue = options.calculateRevenue(item, product);
+            
+            const revenue = calculateSimpleRevenue(item, product);
             const cost = product.purchase_price * item.quantity;
             seller.profit += revenue - cost;
             
@@ -68,7 +70,8 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Назначение премий на основе ранжирования
     sellerStats.forEach((seller, index) => {
-        seller.bonus = options.calculateBonus(index, sellerStats.length, seller);
+        
+        seller.bonus = calculateBonusByProfit(index, sellerStats.length, seller);
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
             .sort((a, b) => b.quantity - a.quantity)
